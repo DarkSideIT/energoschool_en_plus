@@ -1,0 +1,57 @@
+{% extends "base_generic.html" %}
+
+{% block body %}
+    <input type="text" id="event" value="{{ event.pk }}" style="visibility: hidden;">
+    <div class="modal fade" id="qrResultModal" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="qrResultField" class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                {% if event %}
+                    <div class="modal-body">
+                        {% if event.name %}
+                            Название: {{ event.name }} <br>
+                        {% else %}
+                            Название: {{ event.theme }} <br>
+                        {% endif %}
+                        Дата: {{ event.lesson_date }} <br>
+                        Время: {{ event.lesson_time }}
+                    </div>
+                {% else %}
+                    <div class="modal-body">
+                        У вас нет активного события
+                    </div>
+                {% endif %}
+                <div class="modal-footer">
+                    <button id="sendQrButton" type="button" class="btn btn-outline-primary">Отметить</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col"> 
+                <h2>QR-сканнер</h2>
+            </div>
+            <div class="col">
+                <select id="devices"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div id="qr-reader"></div>
+            <div class="text-center" id="qr-sendler">
+                <input id="manualEmailInput" type="email" placeholder="Введите почту">
+                <button id="sendByEmail" class="btn btn-primary">Отправить</button>
+            </div>
+    
+            <div id="notification"></div>
+        </div>
+    </div>
+    {% load static %}
+    <script defer src="{% static 'script/qr-scanner.js' %}"></script>
+{% endblock %}
+
+

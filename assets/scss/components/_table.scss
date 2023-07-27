@@ -1,0 +1,8 @@
+@use '../_vars.scss' as base;
+
+table {
+    thead {
+        color: base.$primaryColor;
+        font-weight: 700;
+    }
+}

@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+
+{% block content %}
+    <div class="page-header">Личный кабинет</div>
+    <div class="user-info">
+        <img class="user-qr-code" src="https://qrcode.tec-it.com/API/QRCode?data={{user.email}}&backcolor=%23ffffff&istransparent=True"/>
+        <p class="user-name">{{ user.last_name }} {{ user.first_name }} {{ user.middle_name }}</p>
+        {% if user.class_number %}
+            <p class="fs-4">{{ user.educational_institution }}, {{ user.class_number }} класс/курс</p>
+        {% endif %}
+    </div>
+    <div id="userScore">
+        <span>{{ user.score }}</span>
+        <img class="icon" src="{% static 'images/icons/coin.svg' %}" alt="Коин">
+    </div>
+    <div class="btn-group mb-3">
+        <a href="{% url 'edit_personal' %}" class="mt-5 btn-text text-gray">Редактировать профиль</a>
+        <a href="{% url 'logout' %}" class="mt-5 btn-text text-gray">Выход</a>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base_generic.html" %}
+
+{% block navbar %}{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="page-menu">
+    <a href="{% url 'events' %}">
+        <img class="icon" src="{% static 'images/icons/arrow-left-circle.svg' %}" alt="">
+    </a>
+    <div class="lesson-title w-50">{{ lesson.name }}</div>
+    <div id="menu-open-btn">
+        <img class="icon" src="{% static 'images/icons/three-dots-vertical.svg' %}" alt="">
+    </div>
+</div>
+
+<div id="menu">
+    <div class="menu-close-btn">
+        <img class="icon" src="{% static 'images/icons/x-square.svg' %}" alt="">
+    </div>
+    <a class="btn btn-outline-primary" href="{% url 'event_update' pk=lesson.id %}">
+        <img src="{% static 'images/icons/pencil-fill.svg' %}" alt="">
+        <span>Изменить</span>
+    </a>
+    <a class="btn btn-outline-primary" href="{% url 'event_export' pk=lesson.id %}">
+        <img src="{% static 'images/icons/cloud-download-fill.svg' %}" alt="">
+        <span>Выгрузить</span>
+    </a>
+    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#questionModal">Завершить</a>
+</div>
+<a class="btn w-100 fixed-bottom btn-primary {% if is_active_event %} disabled {% endif %}"
+    href="{% url 'event_set_active' pk=lesson.id %}" style="--bs-btn-border-radius: 0; --bs-btn-padding-y: 20px;">{{ name_button }}</a>
+
+<!-- Modal -->
+<div class="modal fade" id="questionModal" tabindex="-1" aria-labelledby="questionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header justify-content-center">
+        <h5 class="modal-title" id="questionModalLabel">Вы точно хотите завершить занятие?</h5>
+      </div>
+      <div class="modal-footer justify-content-center">
+          <a type="button" class="btn btn-outline-primary" href="{% url 'event_complete' pk=lesson.id %}">Да, завершить</a>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4 class="mt-5">Список участников</h4>
+{% if cnt_members %}
+<h6 class="text-muted">Количество записей: {{ cnt_members }}</h6>
+{% endif %}
+
+<table class="table table-spired">
+    <thead>
+        <tr>
+            <td class="member_number">№</td>
+            <td>Фамилия</td>
+            <td>Имя</td>
+            <td class="member_platform">Учреждение</td>
+            <td class="text-center">Отметка о присутствии</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member_info in members_info %}
+        <tr>
+            <td class="member_number text-muted">{{ member_info.number }}</td>
+            <td>{{ member_info.member.last_name }}</td>
+            <td>{{ member_info.member.first_name }}</td>
+            <td class="member_platform">{{ member_info.member.educational_institution }}</td>
+            <td class="text-center">
+                <button class="mark_visit {% if member_info.presence %}presence{% endif %}" data-user="{{ member_info.member.email }}" data-lesson="{{ lesson.id }}"></button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script src="{% static 'script/event-admin.js' %}"></script>
+
+{% endblock %}

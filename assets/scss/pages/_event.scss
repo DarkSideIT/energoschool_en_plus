@@ -1,0 +1,149 @@
+@use '../_mixins.scss' as mixins;
+@use '../_vars.scss' as base;
+@use '../components/_table.scss';
+
+$user-presence: #bff2bb;
+
+body {
+    &::after{
+        top: 0;
+        left: 0;
+        position: absolute;
+        content: "";
+        transition: background-color .15s ease-in-out;
+    }
+}
+
+body.mute {
+    &::after {
+        background: rgba(21, 21, 21, 0.5);
+        height: 100vh;
+        width: 100vw;
+    }
+}
+
+.add-btn {
+    &::before {
+        @include mixins.before-icon('/static/images/icons/plus-square-fill.svg');
+        margin-right: 10px;
+    }
+}
+
+.event-nav {
+    display: flex;
+    text-align: center;
+    margin-top: 50px;
+    padding: 0;
+    transition: ease .3s;
+    &:hover {cursor: pointer;}
+}
+
+.event-nav-item {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+
+    &.active {
+        background-color: var(--bs-primary);
+        font-weight: 600;
+        color: #fff;
+    }
+}
+
+.group {
+    @include mixins.flex-row-center;
+    & > * { margin: 0 5px; }
+
+    @media (max-width: 480px) {
+        display: block;
+        & > * { display: block; margin: 5px auto;}
+    }
+}
+
+.page-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .lesson-title {
+        text-align: center;
+    }
+}
+#menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    position: fixed;
+    width: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #fff;
+    top: 0;
+    right: 0;
+    overflow: hidden;
+    transition: width .15s ease-in-out;
+    z-index: 1000;
+
+    .menu-close-btn {
+        padding: 10px;
+        margin-bottom: 40px;
+        align-self: end;
+        justify-self: start;
+    }
+
+    &.opened { 
+        width: 75vw;
+    }
+    a { width: max(250px, 50%); }
+    & > * { margin: 5px 0; }
+}
+
+.btn-bottom {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    transform: translateY(-100%);
+    text-align: center;
+    background: base.$primaryColor;
+    padding: 0 10px;
+}
+
+
+.mark_visit.presence {
+    background: base.$primaryColor;
+
+    &::before {
+        background: #fff;
+        left: 100%;
+        transform: translate(-100%, -50%);
+    }
+}
+
+button.mark_visit {
+    position: relative;
+    width: 40px;
+    height: 20px;
+
+    border-radius: 32px;
+    border: 2px solid base.$primaryColor;
+    background: transparent;
+
+    vertical-align: middle;
+
+    &::before {
+        display: block;
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        content: "";
+        background-color: base.$primaryColor;
+        left: 2px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-radius: 100%;
+        transition: all 0.15s ease-in-out;
+    }
+}
+

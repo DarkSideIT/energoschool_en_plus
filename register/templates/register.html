@@ -1,0 +1,35 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block content %}
+<form action="" method="POST">
+    <table>
+        {% for field in form %}
+        <tr>
+            <td class="td-right">{{ field.label_tag }} </td>
+            <td>{{ field }}</td>
+        </tr>
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <p class="text-center text-danger">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </table>
+    {% csrf_token %}
+    <div class="form-links">
+        <input type="submit" class="btn btn-primary round-button" value="РЕГИСТРАЦИЯ">
+        <p class="text-center">Уже есть аккаунт?
+            <a href="{% url 'login' %}">Войти</a>
+        </p>
+    </div>
+</form>
+{% block scripts %}
+    <script src="{% static 'script/register.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

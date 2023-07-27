@@ -1,0 +1,131 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="d-flex justify-content-between mb-2">
+            <a href="{% url 'all_export' %}" class="btn btn-outline-primary">
+                <span>Выгрузить</span>
+            </a>
+            <a href="{% url 'event_create' %}" class="btn btn-primary add-btn">Добавить занятие</a>
+        </div>
+        <div class="mb-2 mt-3">
+        {% if active_lesson %}
+            <h5>Активное</h5>
+            <p>{{ active_lesson.name }}</p> 
+        {% else %}
+            <h5>Нет активного события</h5>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container row justify-content-center">
+    <h4>Ближайшие занятия</h4>
+    {% for lesson in lessons %}
+        <div class="card m-3 mt-5">
+            {% if lesson.track %}
+            <p class="text-primary text-track">{{ lesson.track }}</p>
+            {% endif %}
+            <div class="card-body">
+                {% if lesson.name %}
+                    <h5 class="card-title fw-bold">{{ lesson.name }}</h5>
+                    <p class="card-text text-muted">{{ lesson.theme }}</p>
+                {% else %}
+                    <h5 class="card-title fw-bold">{{ lesson.theme }}</h5>
+                {% endif %}
+            </div>
+            <div class="card-header">
+                {{ lesson.lesson_date }}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item text-center">{{ lesson.city }}</li>
+                <li class="list-group-item text-center">{{ lesson.lesson_time }}</li>
+                <li class="list-group-item text-center">{{ lesson.lesson_format }}</li>
+                <li class="list-group-item text-center">{{ lesson.count_records }}/{{ lesson.count_seats }}</li>
+            </ul>
+            {% if lesson.is_completed %}
+            <div class="card-body">
+                <p class="text-danger text-center fw-bold">Завершено</p>
+                <a class="btn btn-outline-primary w-100" href="{% url 'event_export' pk=lesson.id %}">Выгрузить</a>
+            </div>
+            {% else %}
+            <div class="card-body">
+                <div class="btn-group-vertical w-100">
+                    <input class="btn-text text-gray" data-bs-toggle="modal" data-bs-target="#lesson_modal_{{lesson.id}}" value="Подробнее"></input>
+                    <a class="btn-text btn-text-secondary w-100" href="{{ lesson.get_absolute_url }}">Открыть</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="lesson_modal_{{lesson.id}}" tabindex="-1" aria-labelledby="lesson_modal_{{lesson.id}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary fw-bold" id="lesson_modal_{{lesson.id}}Label">{{ lesson.lesson_date }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group list-group-flush">
+                        {% if lesson.name %}
+                        <li class="list-group-item"><b>Название:</b> {{ lesson.name }}</li>
+                        {% endif %}
+                        {% if lesson.theme %}
+                        <li class="list-group-item"><b>Тема:</b> {{ lesson.theme }}</li>
+                        {% endif %}
+                        {% if lesson.audience %}
+                        <li class="list-group-item"><b>Для кого:</b> {{ lesson.audience }}</li>
+                        {% endif %}
+                        {% if lesson.teacher %}
+                        <li class="list-group-item"><b>Спикер:</b> {{ lesson.teacher }}</li>
+                        {% endif %}
+                        {% if lesson.place %}
+                        <li class="list-group-item"><b>Адрес:</b> {{ lesson.place }}</li>
+                        {% endif %}
+                        {% if lesson.required_items %}
+                        <li class="list-group-item"><b>Что взять:</b> {{ lesson.required_items }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary round-button" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- <div id="globalEventListContainer" class="container">
+    <div class="row">
+        <div class="bg-light position-sticky top-0">
+            <input id="event-filter" class="my-1" type="text" placeholder="Поиск">
+        </div>
+    
+        {% if global_events_list %}
+        <table id="globalEvents" class="table table-spired">
+            <thead>
+                <tr>
+                    <td>Наименование</td>
+                    <td>Тип</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in global_events_list %}
+                <tr>
+                    <td><a class="btn btn-outline-primary" href="{{ event.get_absolute_url }}">{{ event.name_event }}</a>
+                    </td>
+                    <td>{{ event.type_event }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="info-message">Здесь пусто(</p>
+        {% endif %}
+    </div>
+</div> -->
+<!-- <script src="{% static 'script/event-filter.js'%}"></script> -->
+{% endblock %}

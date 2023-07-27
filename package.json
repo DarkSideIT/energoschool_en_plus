@@ -1,0 +1,24 @@
+{
+  "name": "energo-school",
+  "version": "1.0.0",
+  "description": "```bash\r python manage.py migrate --run-syncdb\r ```",
+  "main": "index.js",
+  "scripts": {
+    "watch-dev": "sass --watch --update assets/scss:static/css",
+    "watch-prod": "sass --watch --update --style=compressed assets/scss:static/css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forum-baikal/energo-school.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/forum-baikal/energo-school/issues"
+  },
+  "homepage": "https://github.com/forum-baikal/energo-school#readme",
+  "dependencies": {
+    "sass": "^1.60.0"
+  }
+}
