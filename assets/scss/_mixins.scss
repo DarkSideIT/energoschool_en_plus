@@ -1,0 +1,21 @@
+@mixin flex-center($direction) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: center;
+}
+
+@mixin flex-column-center { @include flex-center($direction: column); }
+@mixin flex-row-center { @include flex-center($direction: row); }
+
+@mixin default-icon($size: 16px) {
+    display: inline-block;
+    width: $size;
+    height: $size;
+    vertical-align: sub;
+}
+
+@mixin before-icon($background-url) {
+    @include default-icon;
+    content: "";
+    background: url($background-url) no-repeat;
+}

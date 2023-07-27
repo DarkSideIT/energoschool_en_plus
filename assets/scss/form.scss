@@ -1,0 +1,53 @@
+@use '_mixins.scss' as mixins;
+
+body { @include mixins.flex-column-center; }
+form {
+    @include mixins.flex-column-center;
+
+    font-weight: 500;
+    width: max(75%, 480px) !important;
+
+    & > table {
+        align-self: center;
+        border-collapse: separate;
+        border-spacing: 0 1em;
+    }
+}
+
+.td-right { text-align: right; }
+
+form label { 
+    min-width: 50px;
+    max-width: 200px;
+    white-space: wrap;
+}
+
+input {
+    &:required { border-bottom-color: var(--primary-color); }
+    &:disabled { border-bottom-color: lightgray; }
+    &:focus-visible { border-bottom-color: var(--text-color-hover); }
+    &[type="submit"] {margin: 30px auto;}
+}
+
+
+.form-links {
+    @include mixins.flex-column-center;
+    margin: 0 auto; 
+}
+
+@media (max-width: 480px) {
+    form label {
+        text-align: left;
+        color: var(--primary-color);
+        font-weight: 700;
+        margin-left: 20px;
+        width: 100%;
+    }
+
+    form td {
+        display: inline;
+        margin: 0 auto;
+    }
+
+    input, select, textarea { width: 90%; }
+}

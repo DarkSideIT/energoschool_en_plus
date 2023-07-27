@@ -1,0 +1,55 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<div id="notification"></div>   
+<div class="page-header">Магазин</div>
+
+    {% if not products %}
+    <div style="margin-top: 200px;">
+        <div class="text-gray text-center">
+            <h2>Пока ничего нет(</h2>
+        </div>
+    </div>
+    {% endif %}
+    {% for product in products %}
+
+    <div class="product-card {% if product.id in unavailableProducts %} unavailable {% endif %}">
+        <img class="product-card__img" src="/{{ product.image }}" alt="Картинка товара">
+        
+        <div class="product-card__content">
+            <div class="product-card__title">{{ product.title }}</div>
+            <div class="product-card__description">{{ product.description }}</div>
+        </div>
+        
+        <div class="product-card__footer">
+            <div class="product-card__count-buy">Приобретено: {{ countBuyProducts|get_item:product.id }}</div>
+            <div class="product-card__price">
+                <span>{{ product.price }}</span>
+                <img src="{% static 'images/icons/coin.svg' %}" alt="">
+            </div>
+            <button class="product-card__buy-btn" data-bs-toggle="modal" data-bs-target="#questionModal{{product.id}}">КУПИТЬ</button>
+        </div>
+    </div>
+
+    <!-- ModalBuyProduct -->
+    <div class="modal fade" id="questionModal{{product.id}}" tabindex="-1" aria-labelledby="questionModal{{product.id}}Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title" id="questionModal{{product.id}}Label">Приобрести этот мерч?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer btn-group">
+                <a class="btn-text btn-text-secondary" href="{% url 'order' pk=product.id %}">Да, приобрести</a>
+                <input class="btn-text text-gray" data-bs-dismiss="modal" value="Закрыть"></input>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endfor %}
+
+    <script src="{% static 'script/market.js' %}"></script>
+{% endblock %}

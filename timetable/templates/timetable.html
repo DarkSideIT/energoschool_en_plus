@@ -1,0 +1,177 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="warning">
+        <span class="header">Внимание!</span><br> За отсутствие на занятии по записи – баллы снимаются!<br>
+        Регистрация на занятие закрывается в 17:00 за календарный день до начала занятия
+    </div>
+    <div id="notification"></div>
+    {% if my_lessons %}
+    <div class="accordion-toggler opened" for="myLessons">
+        <h4>Мои занятия</h4>
+        <button class="accordion-button opened"></button>
+    </div>
+    <div class="row justify-content-center accordion-content opened" id="myLessons">
+        {% for lesson in my_lessons %}
+        <div class="card m-3 mt-5">
+            {% if lesson.lesson.track %}
+            <p class="text-primary text-track">{{ lesson.lesson.track }}</p>
+            {% endif %}
+            <div class="card-body">
+                {% if lesson.lesson.name %}
+                    <h5 class="card-title fw-bold">{{ lesson.lesson.name }}</h5>
+                    <p class="card-text text-muted">{{ lesson.lesson.theme }}</p>
+                {% else %}
+                    <h5 class="card-title fw-bold">{{ lesson.lesson.theme }}</h5>
+                {% endif %}
+            </div>
+            <div class="card-header">
+                {{ lesson.lesson.lesson_date }}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item text-center">{{ lesson.lesson.city }}</li>
+                <li class="list-group-item text-center">{{ lesson.lesson.lesson_time }}</li>
+                <li class="list-group-item text-center">{{ lesson.lesson.lesson_format }}</li>
+                <li class="list-group-item text-center">{{ lesson.lesson.count_records }}/{{ lesson.lesson.count_seats }}</li>
+            </ul>
+            <div class="card-body">
+                <div class="btn-group-vertical w-100">
+                    <input class="btn-text text-gray" data-bs-toggle="modal" data-bs-target="#lesson_modal_{{lesson.lesson.id}}" value="Подробнее"></input>
+                    {% if lesson.available %}
+                        <input class="btn-text btn-text-secondary" data-bs-toggle="modal" data-bs-target="#questionModal{{lesson.lesson.id}}" value="Отменить запись"></input>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal1 -->
+        <div class="modal fade" id="lesson_modal_{{lesson.lesson.id}}" tabindex="-1" aria-labelledby="lesson_modal_{{lesson.lesson.id}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary fw-bold" id="lesson_modal_{{lesson.lesson.id}}Label">{{ lesson.lesson.lesson_date }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group list-group-flush">
+                        {% if lesson.lesson.name %}
+                        <li class="list-group-item"><b>Название:</b> {{ lesson.lesson.name }}</li>
+                        {% endif %}
+                        {% if lesson.lesson.theme %}
+                        <li class="list-group-item"><b>Тема:</b> {{ lesson.lesson.theme }}</li>
+                        {% endif %}
+                        {% if lesson.lesson.audience %}
+                        <li class="list-group-item"><b>Для кого:</b> {{ lesson.lesson.audience }}</li>
+                        {% endif %}
+                        {% if lesson.lesson.teacher %}
+                        <li class="list-group-item"><b>Спикер:</b> {{ lesson.lesson.teacher }}</li>
+                        {% endif %}
+                        {% if lesson.lesson.place %}
+                        <li class="list-group-item"><b>Адрес:</b> {{ lesson.lesson.place }}</li>
+                        {% endif %}
+                        {% if lesson.lesson.required_items %}
+                        <li class="list-group-item"><b>Что взять:</b> {{ lesson.lesson.required_items }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary round-button" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal2 -->
+        <div class="modal fade" id="questionModal{{lesson.lesson.id}}" tabindex="-1" aria-labelledby="questionModal{{lesson.lesson.id}}Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title" id="questionModal{{lesson.lesson.id}}Label">Вы точно хотите отменить занятие?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer btn-group">
+                <a class="btn-text btn-text-secondary" href="{% url 'cancel_record' pk=lesson.lesson.id %}">Да, отменить</a>
+                <input class="btn-text text-gray" data-bs-dismiss="modal" value="Закрыть"></input>
+            </div>
+            </div>
+        </div>
+        </div>
+    {% endfor %}
+
+    </div>    
+    {% endif %}
+    <div class="accordion-toggler" for="allLessons">
+        <h4>Все занятия</h4>
+        <button class="accordion-button"></button>
+    </div>
+    <div class="row justify-content-center accordion-content" id="allLessons">
+        {% for lesson in other_lessons %}
+        <div class="card m-3 mt-5">
+            {% if lesson.track %}
+            <p class="text-primary text-track">{{ lesson.track }}</p>
+            {% endif %}
+            <div class="card-body">
+                {% if lesson.name %}
+                    <h5 class="card-title fw-bold">{{ lesson.name }}</h5>
+                    <p class="card-text text-muted">{{ lesson.theme }}</p>
+                {% else %}
+                    <h5 class="card-title fw-bold">{{ lesson.theme }}</h5>
+                {% endif %}
+            </div>
+            <div class="card-header bg-primary text-white">
+                {{ lesson.lesson_date }}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item text-center">{{ lesson.city }}</li>
+                <li class="list-group-item text-center">{{ lesson.lesson_time }}</li>
+                <li class="list-group-item text-center">{{ lesson.lesson_format }}</li>
+                <li class="list-group-item text-center" id="lesson_{{lesson.id}}">{{ lesson.count_records }}/{{ lesson.count_seats }}</li>
+            </ul>
+            <div class="card-body">
+                <div class="btn-group-vertical w-100">
+                    <input class="btn-text text-gray" data-bs-toggle="modal" data-bs-target="#lesson_modal_{{lesson.id}}" value="Подробнее"></input>
+                    <input class="btn-text btn-text-secondary btn_record_lesson" data-lesson="{{ lesson.id }}" value="Записаться"></input>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="lesson_modal_{{lesson.id}}" tabindex="-1" aria-labelledby="lesson_modal_{{lesson.id}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary fw-bold" id="lesson_modal_{{lesson.lesson.id}}Label">{{ lesson.lesson_date }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group list-group-flush">
+                        {% if lesson.name %}
+                        <li class="list-group-item"><b>Название:</b> {{ lesson.name }}</li>
+                        {% endif %}
+                        {% if lesson.theme %}
+                        <li class="list-group-item"><b>Тема:</b> {{ lesson.theme }}</li>
+                        {% endif %}
+                        {% if lesson.audience %}
+                        <li class="list-group-item"><b>Для кого:</b> {{ lesson.audience }}</li>
+                        {% endif %}
+                        {% if lesson.teacher %}
+                        <li class="list-group-item"><b>Спикер:</b> {{ lesson.teacher }}</li>
+                        {% endif %}
+                        {% if lesson.place %}
+                        <li class="list-group-item"><b>Адрес:</b> {{ lesson.place }}</li>
+                        {% endif %}
+                        {% if lesson.required_items %}
+                        <li class="list-group-item"><b>Что взять:</b> {{ lesson.required_items }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary round-button" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>   
+    <script src="{% static 'script/timetable.js' %}"></script>
+{% endblock %}

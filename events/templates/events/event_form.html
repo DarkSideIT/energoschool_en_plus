@@ -1,0 +1,39 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <table>
+        {% for field in form %}
+        <tr>
+            <td class="td-right">{{ field.label_tag }}</td>
+            <td>{{ field }}</td>
+        </tr>
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <p class="text-center text-danger">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </table>
+    
+    <div class="form-links">
+        <input class="btn btn-primary round-button" type="submit" value="{{ nameButton }}">
+        <a class="btn btn-primary round-button" href="{% url 'events' %}">Вернуться</a>
+    </div>
+    <!-- <div class="btn-group w-100" >
+        <input type="submit" class="btn btn-primary round-button" value="{{ nameButton }}" style="--bs-btn-border-radius: 0; --bs-btn-padding-y: 20px;"/>
+        <a href="{% url 'events' %}" class="btn btn-outline-primary" style="--bs-btn-border-radius: 0; --bs-btn-padding-y: 20px;">Вернуться</a>
+    </div> -->
+</form>
+
+<!-- {% load static %}
+<script src="{% static 'script/form-control.js' %}"></script> -->
+{% endblock %}
